@@ -10,13 +10,11 @@ import (
 )
 
 type dbSettings struct {
-	Driver   string `yaml:"driver"`
 	Host     string `yaml:"host"`
 	Port     int    `yaml:"port"`
 	Name     string `yaml:"name"`
 	User     string `yaml:"user"`
 	Password string `yaml:"password"`
-	File 	 string	`yaml:"file"`
 }
 
 type uasSettings struct {
@@ -25,13 +23,11 @@ type uasSettings struct {
 
 var UASSettings = &uasSettings{
 	DB: &dbSettings{
-		Driver:   "mysql",
 		Host:     "localhost",
 		Port:     3306,
 		Name:     "uas",
 		User:     "uas",
 		Password: "123456",
-		File:	  "./data.sqlite3",
 	},
 }
 

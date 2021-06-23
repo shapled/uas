@@ -6,6 +6,7 @@ import (
 	"github.com/shapled/pitaya"
 	"github.com/sirupsen/logrus"
 	"time"
+	"uas/dao"
 )
 
 type (
@@ -31,9 +32,9 @@ type (
 
 func ListApps(req pitaya.Request) (pitaya.Response, error) {
 	apps := make([]*TableApp, 0, 0)
-	err := Dao(func(ctx context.Context, db *sqlx.DB) error {
+	err := dao.Dao(func(ctx context.Context, db *sqlx.DB) error {
 		return db.SelectContext(ctx, &apps,
-			`select id,app,desc,created_by,created_at,updated_at,deleted_at from uas_app offset :offset, :limit`,
+			`select id,app,description,created_by,created_at,updated_at,deleted_at from uas_app limit ?, ?`,
 			0, 10)
 	})
 	if err != nil {
