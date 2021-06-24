@@ -3,9 +3,10 @@ package dao
 import (
 	"context"
 	"fmt"
-	"github.com/jmoiron/sqlx"
 	"sync"
 	"uas/settings"
+
+	"github.com/jmoiron/sqlx"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -23,12 +24,12 @@ func initDBClient() error {
 		return nil
 	}
 	var err error
-	dsn := fmt.Sprintf("%s:%s@(%s:%d)/%s?multiStatements=true",
-			settings.UASSettings.DB.User,
-			settings.UASSettings.DB.Password,
-			settings.UASSettings.DB.Host,
-			settings.UASSettings.DB.Port,
-			settings.UASSettings.DB.Name)
+	dsn := fmt.Sprintf("%s:%s@(%s:%d)/%s?multiStatements=true&parseTime=true",
+		settings.UASSettings.DB.User,
+		settings.UASSettings.DB.Password,
+		settings.UASSettings.DB.Host,
+		settings.UASSettings.DB.Port,
+		settings.UASSettings.DB.Name)
 	dbClient, err = sqlx.Connect("mysql", dsn)
 	return err
 }

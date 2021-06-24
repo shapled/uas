@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/shapled/pitaya"
-	"github.com/sirupsen/logrus"
-	"github.com/spf13/cobra"
 	"strings"
 	"uas/api"
 	"uas/dao"
 	"uas/settings"
+
+	"github.com/shapled/pitaya"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/cobra"
 )
 
 var yamlConfig string
@@ -25,7 +26,7 @@ var rootCmd = &cobra.Command{
 }
 
 var serverCmd = &cobra.Command{
-	Use: "server",
+	Use:   "server",
 	Short: "Start server",
 	Run: func(cmd *cobra.Command, args []string) {
 		if yamlConfig != "" {
@@ -36,6 +37,9 @@ var serverCmd = &cobra.Command{
 
 		server := pitaya.NewServer()
 		server.GET("/app/", api.ListApps, &api.AppListRequest{})
+		server.POST("/app/", api.AddApp, &api.AddAppRequest{})
+		server.PUT("/app/", api.ModifyApp, &api.ModifyAppRequest{})
+		server.DELETE("/app/:id/", api.DeleteApp, &api.DeleteAppRequest{})
 		if err := server.Start(":10086"); err != nil {
 			logrus.Fatal(err)
 		}
@@ -43,7 +47,7 @@ var serverCmd = &cobra.Command{
 }
 
 var migrateCmd = &cobra.Command{
-	Use: "migrate",
+	Use:   "migrate",
 	Short: "Migrate from sql file",
 	Run: func(cmd *cobra.Command, args []string) {
 		if yamlConfig != "" {
@@ -53,7 +57,7 @@ var migrateCmd = &cobra.Command{
 		}
 
 		if listSQLFiles {
-			names, err := dao.ListSQLFiles();
+			names, err := dao.ListSQLFiles()
 			if err != nil {
 				logrus.Fatal(err)
 			}

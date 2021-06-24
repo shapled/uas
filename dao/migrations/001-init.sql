@@ -2,7 +2,7 @@ create table uas_app (
   id bigint not null auto_increment primary key comment '主键 id',
   app varchar(16) not null comment '应用名称',
   description varchar(1024) comment '应用描述',
-  status int default 0 comment '状态，0 启用，1 禁用，2 删除',
+  status int not null default 0 comment '状态，0 启用，1 禁用，2 删除',
   created_by bigint not null comment '创建者 id',
   created_at datetime default CURRENT_TIMESTAMP comment '创建时间',
   updated_at datetime default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP comment '更新时间',
