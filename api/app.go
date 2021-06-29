@@ -93,6 +93,7 @@ func ListApps(req pitaya.Request) (pitaya.Response, error) {
 			`select id,app,description,status,created_by,created_at,updated_at,deleted_at 
 					from uas_app
 					where status != ?
+					order by id
 					limit ?, ?`,
 			AppStatusDeleted, offset, limit)
 	})
@@ -151,8 +152,8 @@ func ModifyApp(req pitaya.Request) (pitaya.Response, error) {
 func DeleteApp(req pitaya.Request) (pitaya.Response, error) {
 	request := req.(*DeleteAppRequest)
 	err := dao.Dao(func(ctx context.Context, db *sqlx.DB) error {
-		res, err := db.ExecContext(ctx, "update uas_app set status = ? where id = ?",
-			AppStatusDeleted, request.ID)
+		res, err := db.ExecContext(ctx, "update uas_app set status = ?, deleted_at = ? where id = ?",
+			AppStatusDeleted, time.Now(), request.ID)
 		if err != nil {
 			return err
 		}
@@ -168,5 +169,5 @@ func DeleteApp(req pitaya.Request) (pitaya.Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &ModifyAppResponse{}, nil
+	return &DeleteAppResponse{}, nil
 }

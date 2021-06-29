@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 	"uas/api"
 	"uas/dao"
@@ -35,11 +36,34 @@ var serverCmd = &cobra.Command{
 			}
 		}
 
-		server := pitaya.NewServer()
+		respWrapper := func(resp pitaya.Response) interface{} {
+			return map[string]interface{} {
+				"error": 0,
+				"message": "",
+				"data": resp,
+			}
+		}
+		errWrapper := func(err error) interface {} {
+			return err
+		}
+		server := pitaya.NewServerWithArgs(http.StatusBadRequest, respWrapper, errWrapper)
+		// app
 		server.GET("/app/", api.ListApps, &api.AppListRequest{})
 		server.POST("/app/", api.AddApp, &api.AddAppRequest{})
 		server.PUT("/app/", api.ModifyApp, &api.ModifyAppRequest{})
 		server.DELETE("/app/:id/", api.DeleteApp, &api.DeleteAppRequest{})
+		// role
+		server.GET("/role/", api.ListAppRoles, &api.ListAppRolesRequest{})
+		server.POST("/role/", api.AddRole, &api.AddRoleRequest{})
+		server.POST("/role/permission/", api.AddRolePermission, &api.AddRolePermissionRequest{})
+		server.PUT("/role/", api.ModifyRole, &api.ModifyRoleRequest{})
+		server.DELETE("/role/", api.DeleteRole, &api.DeleteRoleRequest{})
+		server.DELETE("/role/:id/permission/:permission_id/", api.DeleteRolePermission, &api.DeleteRolePermissionRequest{})
+		// permission
+		server.GET("/permission/", api.ListAppPermissions, &api.ListAppPermissionsRequest{})
+		server.POST("/permission/", api.AddPermission, &api.AddPermissionRequest{})
+		server.PUT("/permission/", api.ModifyPermission, &api.ModifyPermissionRequest{})
+		server.DELETE("/permission/:id/", api.DeletePermission, &api.DeletePermissionRequest{})
 		if err := server.Start(":10086"); err != nil {
 			logrus.Fatal(err)
 		}
