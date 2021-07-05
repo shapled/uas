@@ -74,8 +74,8 @@ type (
 
 	DeleteRolePermissionRequest struct {
 		pitaya.BaseRequest
-		ID int64 `param:"id" validate:"gt=0"`
-		PermissionID int64 `param:"permission_id" validate:"gt=0"`
+		ID int64 `query:"id" validate:"gt=0"`
+		PermissionID int64 `query:"permission_id" validate:"gt=0"`
 	}
 
 	DeleteRolePermissionResponse struct {

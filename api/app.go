@@ -57,7 +57,7 @@ type (
 
 	DeleteAppRequest struct {
 		pitaya.BaseRequest
-		ID int64 `param:"id" validate:"gt=0"`
+		ID int64 `query:"id" validate:"gt=0"`
 	}
 
 	DeleteAppResponse struct {
